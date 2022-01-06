@@ -90,11 +90,15 @@ class MemberCount(commands.Cog):
         await self.update_member_count(member)
         bot_info.guilds[member.guild.id].member_update_time[datetime.datetime.now(
         )] = len([i for i in member.guild.members if not i.bot])
+        bot_info.save()
 
     @commands.command()
     async def member_growth(self, ctx):
         bot_info = Bot_info.load()
-        member_counts = bot_info.guilds[ctx.guild.id].member_update_time
+        try:
+            member_counts = bot_info.guilds[ctx.guild.id].member_update_time
+        except AttributeError:
+            member_counts = {}
 
 
 def setup(client):
